@@ -34,7 +34,7 @@ my %args_common = (
     file2 => {
         schema => 'filename*',
         req => 1,
-        pos => 0,
+        pos => 1,
     },
 );
 
@@ -68,6 +68,38 @@ sub algodiff_diff {
     my ($seq1, $seq2) = _read_files(\%args);
     my $diff = Algorithm::Diff::diff($seq1, $seq2);
     [200, "OK", $diff];
+}
+
+$SPEC{algodiff_sdiff} = {
+    v => 1.1,
+    summary => "Perform sdiff() on two files",
+    args => {
+        %args_common,
+    },
+};
+sub algodiff_sdiff {
+    require Algorithm::Diff;
+    my %args = @_;
+
+    my ($seq1, $seq2) = _read_files(\%args);
+    my $sdiff = Algorithm::Diff::sdiff($seq1, $seq2);
+    [200, "OK", $sdiff];
+}
+
+$SPEC{algodiff_compact_diff} = {
+    v => 1.1,
+    summary => "Perform compact_diff() on two files",
+    args => {
+        %args_common,
+    },
+};
+sub algodiff_compact_diff {
+    require Algorithm::Diff;
+    my %args = @_;
+
+    my ($seq1, $seq2) = _read_files(\%args);
+    my $cdiff = Algorithm::Diff::compact_diff($seq1, $seq2);
+    [200, "OK", $cdiff];
 }
 
 1;
