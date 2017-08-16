@@ -16,11 +16,13 @@ $SPEC{':package'} = {
 sub _read_files {
     my $args = shift;
 
-    my $fh;
-    open $fh, "<", $args->{file1} or die "Can't open file '$args->{file1}': $!";
-    chomp(my @seq1 = <$fh>);
-    open $fh, "<", $args->{file2} or die "Can't open file '$args->{file2}': $!";
-    chomp(my @seq2 = <$fh>);
+    open my $fh1, "<", $args->{file1} or die "Can't open file '$args->{file1}': $!";
+    chomp(my @seq1 = <$fh1>);
+    close $fh1;
+
+    open my $fh2, "<", $args->{file2} or die "Can't open file '$args->{file2}': $!";
+    chomp(my @seq2 = <$fh2>);
+    close $fh2;
 
     return (\@seq1, \@seq2);
 }
