@@ -102,6 +102,34 @@ sub algodiff_compact_diff {
     [200, "OK", $cdiff];
 }
 
+$SPEC{algodiff_hunks} = {
+    v => 1.1,
+    summary => "Show hunks information",
+    args => {
+        %args_common,
+    },
+};
+sub algodiff_hunks {
+    require Algorithm::Diff;
+    my %args = @_;
+
+    my ($seq1, $seq2) = _read_files(\%args);
+    my $diff = Algorithm::Diff->new($seq1, $seq2);
+
+    my @res;
+    my $i = -1;
+    while ($diff->Next) {
+        $i++;
+        push @res, [
+            $i,
+            $diff->Same ? "same" : "diff",
+            $diff->Get(qw/Min1 Max1 Min2 Max2/),
+        ];
+    }
+    [200, "OK", \@res,
+     {'table.fields'=>[qw/idx type min1 max1 min2 max2/]}];
+}
+
 1;
 # ABSTRACT:
 
